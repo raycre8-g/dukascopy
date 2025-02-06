@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: dukascopy
+Version: 0.2.1
+Summary: Dukascopy Bank SA historical data downloader
+Home-page: https://github.com/cranties/dukascopy
+Download-URL: https://github.com/cranties/dukascopy/tarball/0.2.1
+Author: Andrea Monni
+Author-email: cranties76@gmail.com
+Keywords: dukascopy,forex,finance,historical data,price,currency
+Classifier: Environment :: Console
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Other Environment
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Financial and Insurance Industry
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+License-File: LICENSE
