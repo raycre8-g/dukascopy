@@ -7,7 +7,7 @@ from dukascopy.app import app
 from dukascopy.core import valid_date, set_up_signals
 from dukascopy.core.utils import valid_timeframe, TimeFrame
 
-VERSION = '0.2.1'
+VERSION = '0.3.0'
 
 
 def main():

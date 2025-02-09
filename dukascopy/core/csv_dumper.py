@@ -7,10 +7,8 @@ from .utils import TimeFrame, stringify, Logger
 
 TEMPLATE_FILE_NAME = "{}-{}_{:02d}_{:02d}-{}_{:02d}_{:02d}.csv"
 
-
 def format_float(number):
     return format(number, '.5f')
-
 
 class CSVFormatter(object):
     COLUMN_TIME = 0
@@ -18,7 +16,6 @@ class CSVFormatter(object):
     COLUMN_BID = 2
     COLUMN_ASK_VOLUME = 3
     COLUMN_BID_VOLUME = 4
-
 
 def write_tick(writer, tick):
     writer.writerow(
@@ -28,15 +25,15 @@ def write_tick(writer, tick):
          'ask_volume': tick[3],
          'bid_volume': tick[4]})
 
-
 def write_candle(writer, candle):
-    writer.writerow(
-        {'time': stringify(candle.timestamp),
-         'open': format_float(candle.open_price),
-         'close': format_float(candle.close_price),
-         'high': format_float(candle.high),
-         'low': format_float(candle.low)})
-
+    writer.writerow({
+        'time': stringify(candle.timestamp),
+        'open': format_float(candle.open_price),
+        'close': format_float(candle.close_price),
+        'high': format_float(candle.high),
+        'low': format_float(candle.low),
+        'volume': candle.volume
+    })
 
 class CSVDumper:
     def __init__(self, symbol, timeframe, start, end, folder, header=False):
@@ -51,12 +48,14 @@ class CSVDumper:
     def get_header(self):
         if self.timeframe == TimeFrame.TICK:
             return ['time', 'ask', 'bid', 'ask_volume', 'bid_volume']
-        return ['time', 'open', 'close', 'high', 'low']
+        return ['time', 'open', 'close', 'high', 'low', 'volume']
 
     def append(self, day, ticks):
         previous_key = None
         current_ticks = []
+        current_volumes = []
         self.buffer[day] = []
+        
         for tick in ticks:
             if self.timeframe == TimeFrame.TICK:
                 self.buffer[day].append(tick)
@@ -67,18 +66,23 @@ class CSVDumper:
                     n = int((key - previous_key) / self.timeframe)
                     for i in range(0, n):
                         self.buffer[day].append(
-                            Candle(self.symbol, previous_key + i * self.timeframe, self.timeframe, current_ticks))
+                            Candle(self.symbol, previous_key + i * self.timeframe, 
+                                  self.timeframe, current_ticks, current_volumes))
                     current_ticks = []
-                current_ticks.append(tick[1])
+                    current_volumes = []
+                current_ticks.append(tick[1])  # Price
+                current_volumes.append(tick[3] + tick[4])  # Total volume (ask + bid)
                 previous_key = key
 
         if self.timeframe != TimeFrame.TICK:
-            self.buffer[day].append(Candle(self.symbol, previous_key, self.timeframe, current_ticks))
+            self.buffer[day].append(
+                Candle(self.symbol, previous_key, self.timeframe, 
+                      current_ticks, current_volumes))
 
     def dump(self):
         file_name = TEMPLATE_FILE_NAME.format(self.symbol,
-                                              self.start.year, self.start.month, self.start.day,
-                                              self.end.year, self.end.month, self.end.day)
+                                            self.start.year, self.start.month, self.start.day,
+                                            self.end.year, self.end.month, self.end.day)
 
         Logger.info("Writing {0}".format(file_name))
 
