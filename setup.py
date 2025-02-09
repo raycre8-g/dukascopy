@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 NAME = "dukascopy"
-VERSION = '0.2.1'
+VERSION = '0.3.0'
 
 setup(
     name=NAME,
