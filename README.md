@@ -17,10 +17,10 @@ This is what **dukascopy** looks like:
 
 ## Installation
 
-**dukascopy** requires python 3.5 and request 2.0.1. It can be installed using `pip` as follows:
+**dukascopy** requires python 3.5 and request 2.0.1. It can be installed using `python setup.py install` after downloading the source code.
 
 ```
-pip install dukascopy
+python setup.py install
 ```
 
 ## Usage
